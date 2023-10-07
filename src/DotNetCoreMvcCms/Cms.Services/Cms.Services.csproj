@@ -12,8 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Concrete\" />
-    <Folder Include="Abstract\" />
+    <ProjectReference Include="..\Cms.Data\Cms.Data.csproj" />
   </ItemGroup>
 
 </Project>

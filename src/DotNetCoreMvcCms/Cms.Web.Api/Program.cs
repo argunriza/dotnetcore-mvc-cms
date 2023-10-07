@@ -1,4 +1,9 @@
+
 using Cms.Data.DbContext;
+using Cms.Data.Models.Entities;
+using Cms.Services.Abstract;
+using Cms.Services.Concrete;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,9 +14,15 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<AppDbContext>()
-var app = builder.Build();
+//DbContext operations
+builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 
+//DI
+builder.Services.AddScoped<DbContext, AppDbContext>();
+builder.Services.AddScoped<IDataRepository<DoctorEntity>, IDataRepository<DoctorEntity>>();
+builder.Services.AddScoped<IDoctorService, DoctorService>();
+
+var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -24,5 +35,13 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+using (var scope = app.Services.CreateScope())
+{
+	var services = scope.ServiceProvider;
+	var context  = services.GetRequiredService<AppDbContext>();
+	await context.Database.EnsureDeletedAsync();
+	await context.Database.EnsureCreatedAsync();
+}
 
 app.Run();
