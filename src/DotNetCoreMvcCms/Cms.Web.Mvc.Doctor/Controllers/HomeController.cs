@@ -1,32 +1,28 @@
-﻿using Cms.Web.Mvc.Doctor.Models;
+﻿using Cms.Data.Models.Entities;
+using Cms.Web.Mvc.Doctor.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
 namespace Cms.Web.Mvc.Doctor.Controllers
 {
-	public class HomeController : Controller
-	{
-		private readonly ILogger<HomeController> _logger;
+    public class HomeController : Controller
+    {
+        private readonly ILogger<HomeController> _logger;
 
-		public HomeController(ILogger<HomeController> logger)
-		{
-			_logger = logger;
-		}
+        private readonly HttpClient _httpClient;
 
-		public IActionResult Index()
-		{
-			return View();
-		}
+        private readonly string _apiNavbar = "https://localhost:7078/api/Navbar";
 
-		public IActionResult Privacy()
-		{
-			return View();
-		}
+        public HomeController(HttpClient httpClient)
+        {
+            _httpClient = httpClient;
+        }
 
-		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-		public IActionResult Error()
-		{
-			return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-		}
-	}
+        public async Task<ActionResult> Index()
+        {
+            var model = await _httpClient.GetFromJsonAsync<List<NavbarEntity>>(_apiNavbar);
+
+            return View(model);
+        }
+    }
 }

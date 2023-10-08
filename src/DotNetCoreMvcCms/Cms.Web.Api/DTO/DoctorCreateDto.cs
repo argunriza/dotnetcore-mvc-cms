@@ -2,5 +2,6 @@
 {
 	public class DoctorCreateDto
 	{
+		public int Id { get; set; }
 	}
 }

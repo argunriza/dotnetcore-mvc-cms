@@ -19,7 +19,7 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(buil
 
 //DI
 builder.Services.AddScoped<DbContext, AppDbContext>();
-builder.Services.AddScoped<IDataRepository<DoctorEntity>, IDataRepository<DoctorEntity>>();
+builder.Services.AddScoped<IDataRepository<DoctorEntity>, DataRepository<DoctorEntity>>();
 builder.Services.AddScoped<IDoctorService, DoctorService>();
 
 var app = builder.Build();
